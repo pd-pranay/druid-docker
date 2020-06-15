@@ -16,7 +16,7 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-version: "2.2"
+version: "3.3"
 
 volumes:
   metadata_data: {}
@@ -40,13 +40,13 @@ services:
 
   # Need 3.5 or later for container nodes
   zookeeper:
-    container_name: zookeeper
+    container_name: zookeeper1
     image: zookeeper:3.5
     ports:
       - "2181:2181"
     environment:
       - ZOO_MY_ID=1
-      - ZOOKEEPER_CLIENT_PORT=2181
+      # - ZOOKEEPER_CLIENT_PORT=2181
 
   coordinator:
     image: apache/druid:0.17.0
@@ -129,31 +129,31 @@ services:
       - router
     env_file:
       - environment
-  kafka:
-    image: wurstmeister/kafka
-    restart: always
-    container_name: kafka
-    ports:
-      # - target: 9092
-      #   published: 9092
-      #   protocol: tcp
-      #   mode: host
-      - "9092:9092"
-    depends_on:
-      - zookeeper
-    environment:
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: INSIDE://kafka:29092,OUTSIDE://198.199.120.33:9092
-      KAFKA_LISTENERS: INSIDE://:29092,OUTSIDE://:9092
-      KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_PORT: 9092
-      KAFKA_LOG_RETENTION_MS: 60000
-      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
-      KAFKA_CREATE_TOPICS_SEPARATOR: "$$'\n'"
-      KAFKA_CREATE_TOPICS: |
-        requestLog:1:1 --config retention.ms=3600000
-        responseLog:1:1 --config retention.ms=3600000
-        impressionLog:1:1 --config retention.ms=3600000
-        cappingLog:1:1 --config retention.ms=3600000
-        errorLog:1:1 --config retention.ms=3600000
+
+  # kafka:
+  #   image: wurstmeister/kafka
+  #   restart: always
+  #   container_name: kafka
+  #   ports:
+  #     - target: 9092
+  #       published: 9092
+  #       protocol: tcp
+  #       mode: host
+  #   depends_on:
+  #     - zookeeper
+  #   environment:
+  #     KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
+  #     KAFKA_ADVERTISED_LISTENERS: INSIDE://kafka:29092,OUTSIDE://198.199.120.33:9092
+  #     KAFKA_LISTENERS: INSIDE://:29092,OUTSIDE://:9092
+  #     KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
+  #     KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+  #     KAFKA_ADVERTISED_PORT: 9092
+  #     KAFKA_LOG_RETENTION_MS: 60000
+  #     KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
+  #     KAFKA_CREATE_TOPICS_SEPARATOR: "$$'\n'"
+  #     KAFKA_CREATE_TOPICS: |
+  #       requestLog:1:1 --config retention.ms=3600000
+  #       responseLog:1:1 --config retention.ms=3600000
+  #       impressionLog:1:1 --config retention.ms=3600000
+  #       cappingLog:1:1 --config retention.ms=3600000
+  #       errorLog:1:1 --config retention.ms=3600000
