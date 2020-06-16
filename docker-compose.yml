@@ -95,7 +95,7 @@ services:
     command:
       - historical
     env_file:
-      - environment
+      - env_historical
 
   middlemanager:
     image: apache/druid:0.17.0
