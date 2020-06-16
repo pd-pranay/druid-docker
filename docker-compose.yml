@@ -78,7 +78,7 @@ services:
     command:
       - broker
     env_file:
-      - environment
+      - env_historical
 
   historical:
     image: apache/druid:0.17.0
